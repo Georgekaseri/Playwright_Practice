@@ -81,7 +81,7 @@ test('Register New User Test,', async ({page})=>
     await clickOnAge.check();
     await registerBtn.click();
 });
-test.only('login with new user', async ({page})=>    
+test('login with new user', async ({page})=>    
 {
     const userEmail = page.locator('#userEmail');
     const fillPassword = page.locator('#userPassword');
@@ -95,3 +95,52 @@ test.only('login with new user', async ({page})=>
     console.log(await cardTile1.nth(0).textContent());
     console.log(await cardTile1.allTextContents())
 });
+test('Dropdown Test,', async ({page})=>
+{
+    const userName = page.locator('#username');
+    const password = page.locator('#password');
+    const selectUser = page.locator('.checkmark');
+    const selectDropdown = page.locator('select.form-control');
+    const terms = page.locator('#terms');
+    const signInBtn = page.locator('#signInBtn');
+    const selectStudent = page.locator('#okayBtn');
+    const blinkingTest = page.locator('.blinkingText');
+
+    await page.goto('https://rahulshettyacademy.com/loginpagePractise/');
+    await userName.fill('rahulshettyacademy');
+    await password.fill('learning');
+    await selectUser.nth(1).click();
+    await selectStudent.click();
+    await expect(selectUser.nth(1)).toBeChecked();
+    await selectDropdown.selectOption('consult');
+    await expect(selectDropdown).toHaveValue('consult');
+    await terms.click();
+    await expect(terms).toBeChecked();
+    await signInBtn.click();
+    await expect(blinkingTest).toBeVisible();
+    await expect(blinkingTest).toHaveAttribute('class', 'blinkingText');
+    // await page.pause();    
+});
+test.only('Child Window Handling', async ({browser})=>
+ {
+    const context = await browser.newContext();
+    const page =  await context.newPage();
+    const userName = page.locator('#username');
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    const documentLink = page.locator("[href*='documents-request']");
+ 
+    const [newPage]=await Promise.all(
+   [
+      context.waitForEvent('page'),//listen for any new page pending,rejected,fulfilled
+      documentLink.click(),
+   
+   ])//new page is opened
+   
+ 
+    const  text = await newPage.locator(".red").textContent();
+    const arrayText = text.split("@");
+    const domainName = arrayText[1].split(" ")[0];
+    console.log (domainName);
+    await userName.fill(domainName);
+    console.log(await userName.textContent());
+ })

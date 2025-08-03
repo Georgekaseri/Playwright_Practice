@@ -35,6 +35,10 @@ test.only('login with new user', async ({page})=>
     await userEmail.fill('georgekaseri22@gmail.com');
     await fillPassword.fill('Leeds85@');
     await loginBtn.click();
+    // Wait for the page to load and the card tile to be visible
+    await page.waitForLoadState('networkidle')
+    // Ensure the card tile is ready before accessing its content
+    //await cardTile1.first().waitFor();
     console.log(await cardTile1.nth(0).textContent());
     console.log(await cardTile1.allTextContents())
 });
