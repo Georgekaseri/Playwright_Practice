@@ -121,26 +121,37 @@ test('Dropdown Test,', async ({page})=>
     await expect(blinkingTest).toHaveAttribute('class', 'blinkingText');
     // await page.pause();    
 });
-test.only('Child Window Handling', async ({browser})=>
+test('Child Window Handling', async ({browser})=>
  {
-    const context = await browser.newContext();
-    const page =  await context.newPage();
-    const userName = page.locator('#username');
-    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
-    const documentLink = page.locator("[href*='documents-request']");
- 
-    const [newPage]=await Promise.all(
-   [
-      context.waitForEvent('page'),//listen for any new page pending,rejected,fulfilled
-      documentLink.click(),
+        // Create a new browser context and page
+     const context = await browser.newContext();
+       // Create a new page
+     const page =  await context.newPage();
+     const userName = page.locator('#username');
+     await page.goto("https://rahulshettyacademy.com/loginpagePractise/")
+     const documentLink = page.locator("[href*='documents-request']");
+
+     const [newPage] = await Promise.all(
+     [
+        context.waitForEvent('page'),//listen for any new page pending,rejected,fulfilled
+        documentLink.click(),
+     ])//new page is opened
+
+
+     // Extract the text content from the new page
+     const text = await newPage.locator(".red").textContent();
+     console.log(text);
+
+     // Extract the User Name  from the email address
    
-   ])//new page is opened
-   
- 
-    const  text = await newPage.locator(".red").textContent();
-    const arrayText = text.split("@");
-    const domainName = arrayText[1].split(" ")[0];
-    console.log (domainName);
-    await userName.fill(domainName);
-    console.log(await userName.textContent());
+     const arrayText = text.split("@");
+     const domainName = arrayText[1].split(" ")[0];
+     console.log (domainName);
+
+     await userName.fill(domainName);
+    
+     console.log(await userName.inputValue());
+    
+
+
  })

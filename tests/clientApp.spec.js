@@ -1,4 +1,5 @@
 const {test, expect} = require('@playwright/test');
+const { forEach } = require('lodash');
 
 test('Register New User Test,', async ({page})=>
 {
@@ -37,8 +38,23 @@ test.only('login with new user', async ({page})=>
     await loginBtn.click();
     // Wait for the page to load and the card tile to be visible
     await page.waitForLoadState('networkidle')
+  
     // Ensure the card tile is ready before accessing its content
-    //await cardTile1.first().waitFor();
+    await cardTile1.first().waitFor();
     console.log(await cardTile1.nth(0).textContent());
     console.log(await cardTile1.allTextContents())
+
+    const productName = 'ZARA COAT 3'
+    const products = page.locator('.card-body');
+    const count = await products.count();
+
+ for (let i = 0; i < count; ++i) {
+      if (await products.nth(i).locator("b").textContent() === productName) {
+         //add to cart
+         await products.nth(i).locator("text= Add To Cart").click();
+         break;
+      }
+   }
+await page.pause();
+
 });

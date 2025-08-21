@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
+import { trace } from 'console';
 
 /**
  * Read environment variables from file.
@@ -22,7 +23,9 @@ const config = ({
   use: {
 
     browserName: 'chromium',
-    headless: true,
+    headless: false,
+    screenshot : 'only-on-failure',
+    trace: 'retain-on-failure'
   }
 });
 
